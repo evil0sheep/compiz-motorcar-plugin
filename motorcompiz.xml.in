@@ -1,14 +1,15 @@
 <compiz>
-	<plugin name=”motorcompiz” useBcop=”true”>
-	<_short> Motorcar Windows For Compiz </_short>
-	<_long> Adds Support for Motorcar 3D Windowing to Compiz </_long>
-	<options>
-		<option name=”foo” type=”int”>
-			<_short> Foo </_short>
-			<_long> Foobar! </_long>
-			<min>0 </min>
-			<max> 10 </max>
-			<default> 3 </default>
-		</option>
-	</options>
+	<plugin name="motorcompiz" useBcop="true">
+		<_short>MotorCompiz</_short>
+		<_long>Adds Support for Motorcar 3D Windowing in Compiz</_long>
+		<options>
+			<option name="foo" type="int">
+				<_short> Foo </_short>
+				<_long> Foobar! </_long>
+				<min>0 </min>
+				<max> 10 </max>
+				<default> 3 </default>
+			</option>
+		</options>
+	</plugin>
 </compiz>
