@@ -2,6 +2,15 @@
 	<plugin name="motorcompiz" useBcop="true">
 		<_short>MotorCompiz</_short>
 		<_long>Adds Support for Motorcar 3D Windowing in Compiz</_long>
+		<deps>
+			<requirement>
+				<plugin>opengl</plugin>
+			</requirement>
+			<relation type="after">
+				<plugin>composite</plugin>
+				<plugin>opengl</plugin>
+			</relation>
+		</deps>
 		<options>
 			<option name="foo" type="int">
 				<_short> Foo </_short>
