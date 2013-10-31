@@ -14,13 +14,24 @@ class MotorScreen :
 	public CompositeScreenInterface
 {
 	public:
+		CompScreen *screen;
 		CompositeScreen *cScreen;
 		GLScreen	*gScreen;
 
 		MotorScreen (CompScreen *);
 		~MotorScreen ();
 
-		void donePaint ();
+		virtual void preparePaint (int);
+		virtual void donePaint ();
+
+		virtual bool glPaintOutput (const GLScreenPaintAttrib &attrib,
+				    const GLMatrix 	      &matrix,
+				    const CompRegion 	      &region,
+				    CompOutput 		      *output,
+				    unsigned int	      mask);
+
+
+		
 };
 
 class MotorWindow :
@@ -39,16 +50,18 @@ class MotorWindow :
 		MotorWindow (CompWindow *);
 		~MotorWindow ();
 
-		bool glPaint (const GLWindowPaintAttrib &attrib,
+		virtual bool glPaint (const GLWindowPaintAttrib &attrib,
 		      const GLMatrix 		&matrix,
 		      const CompRegion 		&region,
 		      unsigned int		mask);
+
+		bool isTransformable();
 };
 
-#define MOTORCOMPIZ_SCREEN(screen)						       \
+#define MOTOR_SCREEN(screen)						       \
     MotorScreen *ms = MotorScreen::get (screen);
 
-#define MOTORCOMPIZ_WINDOW(window)						       \
+#define MOTOR_WINDOW(window)						       \
     MotorWindow *mw = MotorWindow::get (window);
 
 

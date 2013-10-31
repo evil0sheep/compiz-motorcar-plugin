@@ -1,8 +1,28 @@
 #include "motorcompiz.h"
 COMPIZ_PLUGIN_20090315 (motorcompiz, MotorCompizPluginVTable);
 
+bool
+MotorWindow::isTransformable ()
+{
+
+    if (window->overrideRedirect ())
+	return false;
+
+    if (window->wmType () & (CompWindowTypeDockMask | CompWindowTypeDesktopMask))
+	return false;
+
+
+    if (window->state () & CompWindowStateSkipTaskbarMask)
+	return false;
+
+
+
+    return true;
+}
+
 MotorScreen::MotorScreen(CompScreen * s):
 	PluginClassHandler <MotorScreen, CompScreen> (s),
+	screen (s),
     cScreen (CompositeScreen::get (screen)),
     gScreen (GLScreen::get (screen))
 
@@ -12,12 +32,32 @@ MotorScreen::MotorScreen(CompScreen * s):
 MotorScreen::~MotorScreen ()
 {
 }
+
+void MotorScreen::preparePaint (int ms){
+	cScreen->preparePaint(ms);
+}
+
 void MotorScreen::donePaint ()
 {
 
 	cScreen->damageScreen ();
     cScreen->donePaint ();
 }
+
+
+
+
+bool MotorScreen::glPaintOutput (const GLScreenPaintAttrib &attrib,
+				    const GLMatrix 	      &matrix,
+				    const CompRegion 	      &region,
+				    CompOutput 		      *output,
+				    unsigned int	      mask)
+{
+	return gScreen->glPaintOutput (attrib, matrix, region, output, mask | PAINT_SCREEN_WITH_TRANSFORMED_WINDOWS_MASK | PAINT_SCREEN_FULL_MASK	);
+
+
+}
+
 
 
 MotorWindow::MotorWindow(CompWindow *w):
@@ -45,13 +85,21 @@ bool MotorWindow::glPaint (const GLWindowPaintAttrib &attrib,
 
 	//transform = glm::scale(transform, glm::vec3(0.5f));
 
-	mTransform = glm::rotate(mTransform, 1.f, glm::vec3(0,1,0));
+	if(isTransformable()){
+		mTransform = glm::rotate(mTransform, 1.f, glm::vec3(0,1,0));
+	}
+	
 	
 
 
 	GLMatrix newGLMatrix (glm::value_ptr(mTransform*transform));
 	
-	return gWindow->glPaint(attrib, newGLMatrix, region, mask );
+	bool status = gWindow->glPaint(attrib, newGLMatrix, region, mask | PAINT_WINDOW_TRANSFORMED_MASK);
+
+
+
+	return status;
+
 }
 
 bool
