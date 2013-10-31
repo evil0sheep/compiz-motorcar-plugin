@@ -14,11 +14,13 @@ class MotorScreen :
 	public CompositeScreenInterface
 {
 	public:
-		// CompositeScreen *cScreen;
-		// GLScreen	*gScreen;
+		CompositeScreen *cScreen;
+		GLScreen	*gScreen;
 
 		MotorScreen (CompScreen *);
 		~MotorScreen ();
+
+		void donePaint ();
 };
 
 class MotorWindow :
@@ -31,6 +33,8 @@ class MotorWindow :
 		CompWindow *window;
 		CompositeWindow *cWindow;
 		GLWindow   *gWindow;
+
+		glm::mat4 mTransform;
 
 		MotorWindow (CompWindow *);
 		~MotorWindow ();

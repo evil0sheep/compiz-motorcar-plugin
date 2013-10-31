@@ -2,13 +2,23 @@
 COMPIZ_PLUGIN_20090315 (motorcompiz, MotorCompizPluginVTable);
 
 MotorScreen::MotorScreen(CompScreen * s):
-	PluginClassHandler <MotorScreen, CompScreen> (s)
+	PluginClassHandler <MotorScreen, CompScreen> (s),
+    cScreen (CompositeScreen::get (screen)),
+    gScreen (GLScreen::get (screen))
+
 {
 }
 
 MotorScreen::~MotorScreen ()
 {
 }
+void MotorScreen::donePaint ()
+{
+
+	cScreen->damageScreen ();
+    cScreen->donePaint ();
+}
+
 
 MotorWindow::MotorWindow(CompWindow *w):
 	PluginClassHandler <MotorWindow, CompWindow> (w),
@@ -33,14 +43,15 @@ bool MotorWindow::glPaint (const GLWindowPaintAttrib &attrib,
 
 	glm::mat4 transform = glm::make_mat4(matrix.getMatrix());
 
-	transform = glm::scale(transform, glm::vec3(0.5f));
-	printf("transforming window\n");
+	//transform = glm::scale(transform, glm::vec3(0.5f));
+
+	mTransform = glm::rotate(mTransform, 1.f, glm::vec3(0,1,0));
 	
 
-	GLMatrix newGLMatrix (glm::value_ptr(transform));
-	
 
-	return gWindow->glPaint(attrib, newGLMatrix, region, mask | PAINT_WINDOW_TRANSFORMED_MASK);
+	GLMatrix newGLMatrix (glm::value_ptr(mTransform*transform));
+	
+	return gWindow->glPaint(attrib, newGLMatrix, region, mask );
 }
 
 bool
